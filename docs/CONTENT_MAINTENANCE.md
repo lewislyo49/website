@@ -123,10 +123,19 @@ title:
 avconvert --source "/本机备份/新主页视频.mp4" \
   --preset PresetAppleM4V720pHD \
   --output "public/media/hero/home-hero.m4v" \
-  --duration 12 --replace
+  --replace
 ```
 
-3. 再使用 `PresetAppleM4VWiFi` 生成 `home-hero-mobile.m4v`。
+不要加入 `--duration` 参数；省略该参数时会转换到原片结尾。加入例如 `--duration 12` 会把网页视频永久裁成 12 秒。
+
+3. 再生成完整的手机版副本：
+
+```bash
+avconvert --source "/本机备份/新主页视频.mp4" \
+  --preset PresetAppleM4VWiFi \
+  --output "public/media/hero/home-hero-mobile.m4v" \
+  --replace
+```
 4. 从视频中导出一张 16:9 静态图，保存为 `home-poster.webp`。
 5. 不需要修改页面代码，因为文件名固定。
 6. 运行 `pnpm media:check` 和 `pnpm build`，检查桌面、手机与减少动态效果模式。
