@@ -260,7 +260,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .primary-nav { justify-self: center; gap: 10px; }
   .language-nav { gap: 6px; }
   .primary-nav a, .language-nav a { font-size: 8px; letter-spacing: .05em; }
-  .hero__logo { width: 190px; }
+  /* Reversible mobile test: show the full landscape hero instead of cropping it to a portrait viewport. */
+  .hero { min-height: 66svh; }
+  .hero__video {
+    inset: 50% 0 auto;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    transform: translateY(-50%);
+  }
+  .hero__logo { width: 160px; }
+  .hero__scroll { bottom: 18px; }
   .intro-section { min-height: 58svh; }
   .intro-section h1 { font-size: clamp(48px, 16vw, 75px); }
   .intro-section p { font-size: 15px; }
