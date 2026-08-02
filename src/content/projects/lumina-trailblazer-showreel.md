@@ -14,7 +14,7 @@ roles: [AI Creation, Creative Direction, Motion Design, Editing]
 cover: /media/hero/home-poster.webp
 media:
   - type: video
-    src: /media/hero/home-hero.m4v
+    src: /media/hero/home-hero-46s.m4v
     poster: /media/hero/home-poster.webp
     alt:
       en: "Lumina Trailblazer main showreel"

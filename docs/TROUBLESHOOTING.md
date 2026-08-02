@@ -38,7 +38,7 @@ pnpm build
 ## 主页视频黑屏或不能自动播放
 
 - 必须保留 `autoplay muted loop playsinline`；浏览器不允许带声音自动播放。
-- 确认 `public/media/hero/home-hero.m4v` 与 `home-hero-mobile.m4v` 存在。
+- 确认 `public/media/hero/home-hero-46s.m4v` 与 `home-hero-mobile.m4v` 存在。
 - 使用 Safari 和 Chrome 分别测试。
 - 如果访客启用了减少动态效果，网站会故意显示 `home-poster.webp` 而不是播放。
 - 编码不兼容时，重新使用 `avconvert` 的 Apple M4V 预设生成副本。

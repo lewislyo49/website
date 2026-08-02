@@ -122,7 +122,7 @@ title:
 ```bash
 avconvert --source "/本机备份/新主页视频.mp4" \
   --preset PresetAppleM4V720pHD \
-  --output "public/media/hero/home-hero.m4v" \
+  --output "public/media/hero/home-hero-46s.m4v" \
   --replace
 ```
 
@@ -137,7 +137,7 @@ avconvert --source "/本机备份/新主页视频.mp4" \
   --replace
 ```
 4. 从视频中导出一张 16:9 静态图，保存为 `home-poster.webp`。
-5. 不需要修改页面代码，因为文件名固定。
+5. 若新视频内容或时长发生变化，建议更改文件名中的版本标记，并同步修改 `src/pages/[lang]/index.astro` 和对应作品文件，避免访客浏览器继续使用旧视频缓存。
 6. 运行 `pnpm media:check` 和 `pnpm build`，检查桌面、手机与减少动态效果模式。
 
 ## 8. 修改联系信息与外部链接

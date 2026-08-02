@@ -52,7 +52,7 @@ pnpm preview      # 预览构建后的正式版本
 
 网站只使用：
 
-- `public/media/hero/home-hero.m4v`：12 秒、720p 桌面副本。
+- `public/media/hero/home-hero-46s.m4v`：完整 46.3 秒、720p 桌面副本。
 - `public/media/hero/home-hero-mobile.m4v`：轻量移动端副本。
 - `public/media/hero/home-poster.webp`：加载失败和减少动态效果时的封面。
 
