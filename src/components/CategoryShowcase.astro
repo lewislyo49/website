@@ -1,0 +1,88 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/ui';
+import ProjectCard from './ProjectCard.astro';
+import VtuberCard from './VtuberCard.astro';
+
+interface CategoryItem {
+  slug: string;
+  label: Record<Lang, string>;
+}
+
+interface Props {
+  categories: readonly CategoryItem[];
+  projects: CollectionEntry<'projects'>[];
+  lang: Lang;
+  variant: 'video' | 'graphic';
+}
+
+const { categories, projects, lang, variant } = Astro.props;
+const groupId = `${variant}-categories`;
+const copy = {
+  en: { empty: 'More work is being prepared.' },
+  zh: { empty: '更多作品正在整理中。' },
+  ja: { empty: '作品を準備中です。' }
+}[lang];
+---
+
+<div class={`category-showcase category-showcase--${variant}`} data-category-showcase>
+  <nav class="category-rail" aria-label={groupId}>
+    {categories.map((item, index) => (
+      <a
+        href={`/${lang}/work/category/${item.slug}/`}
+        data-category-trigger={item.slug}
+        aria-controls={`${groupId}-${item.slug}`}
+        aria-expanded={index === 0 ? 'true' : 'false'}
+        class:list={{ 'is-active': index === 0 }}
+      >{item.label[lang]}</a>
+    ))}
+  </nav>
+  <div class="category-panels">
+    {categories.map((item, index) => {
+      const matches = projects.filter((project) => project.data.categories.includes(item.slug as never)).slice(0, variant === 'video' ? 6 : 4);
+      const includesVtuber = item.slug === 'non-profit';
+      return (
+        <section
+          id={`${groupId}-${item.slug}`}
+          class:list={['category-panel', { 'is-active': index === 0 }]}
+          data-category-panel={item.slug}
+          aria-hidden={index === 0 ? 'false' : 'true'}
+        >
+          <div class="category-panel__inner">
+            {matches.length || includesVtuber ? (
+              <div class={`project-grid project-grid--${variant}`}>
+                {matches.map((project) => <ProjectCard {project} {lang} />)}
+                {includesVtuber && <VtuberCard {lang} />}
+              </div>
+            ) : <p class="category-empty">{copy.empty}</p>}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-category-showcase]').forEach((showcase) => {
+    const triggers = Array.from(showcase.querySelectorAll<HTMLAnchorElement>('[data-category-trigger]'));
+    const panels = Array.from(showcase.querySelectorAll<HTMLElement>('[data-category-panel]'));
+    const activate = (slug: string) => {
+      triggers.forEach((trigger) => {
+        const active = trigger.dataset.categoryTrigger === slug;
+        trigger.classList.toggle('is-active', active);
+        trigger.setAttribute('aria-expanded', String(active));
+      });
+      panels.forEach((panel) => {
+        const active = panel.dataset.categoryPanel === slug;
+        panel.classList.toggle('is-active', active);
+        panel.setAttribute('aria-hidden', String(!active));
+      });
+    };
+    triggers.forEach((trigger) => {
+      const slug = trigger.dataset.categoryTrigger;
+      if (!slug) return;
+      trigger.addEventListener('pointerenter', () => activate(slug));
+      trigger.addEventListener('focus', () => activate(slug));
+    });
+  });
+</script>

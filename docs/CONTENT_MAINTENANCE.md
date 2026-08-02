@@ -57,7 +57,7 @@ avconvert --source "/完整路径/原视频.mp4" \
   --replace
 ```
 
-作品视频不会自动播放。建议单个网页视频小于 15 MB；超大或较长作品优先上传 YouTube，再使用 YouTube 模板。
+带有本地视频的作品卡片会自动使用 `media` 中的第一个视频作为鼠标悬停预览；不需要修改组件代码。项目详情页中的本地视频也会在鼠标悬停时静音播放，移开后暂停。手机端仍由访客点击播放，启用“减少动态效果”的设备不会触发悬停播放。建议单个网页视频小于 15 MB；超大或较长作品优先上传 YouTube，再使用 YouTube 模板。
 
 ## 3. 新增 YouTube 作品
 
@@ -94,6 +94,7 @@ momiji  kea-lani  sugoi  ideal-foods  independent
 - `published: false`：保留项目文件但不在网站显示。
 - 同一作品可以有多个分类，不需要复制项目。
 - 没有作品的分类会自动显示 Coming Soon。
+- AI 视频页面按 `order` 从小到大排列；当前来明先锋主页影像使用 `order: 0`，因此会位于 Sugoi AI 视频之前。
 
 如果需要新增分类或客户，同时修改：
 
@@ -133,7 +134,7 @@ avconvert --source "/本机备份/新主页视频.mp4" \
 ## 8. 修改联系信息与外部链接
 
 - 电邮、SMS 与 Instagram：`src/components/ContactSection.astro`
-- Vtuber Linktree：`src/layouts/BaseLayout.astro`
+- Vtuber Linktree：`src/components/VtuberCard.astro`（显示在“非盈利企划”分类内）
 - 网站域名：`astro.config.mjs`
 - Netlify 表单邮件通知：Netlify 网站后台，不在代码仓库中。
 
@@ -154,7 +155,7 @@ GitHub 推送后，Netlify 自动建立 Deploy Preview/Production deploy。先�
 - 三语标题与简介均存在。
 - 分类、客户、年份和顺序正确。
 - 所有图片与视频路径通过 `pnpm media:check`。
-- 视频点击后播放，但不会自动播放。
+- 桌面端将鼠标移到本地视频作品卡片或详情视频上会静音播放预览，移开后停止；手机端可点击播放。
 - 图片没有明显压缩损伤，文件大小合理。
 - 手机端没有横向滚动。
 - 所有素材均拥有公开展示权。

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
+import CategoryShowcase from '../../components/CategoryShowcase.astro';
 import ContactSection from '../../components/ContactSection.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import ArrowIcon from '../../components/ArrowIcon.astro';
@@ -15,26 +15,24 @@ export function getStaticPaths() {
 const lang = isLang(Astro.params.lang) ? Astro.params.lang : 'en';
 const t = ui[lang];
 const projects = (await getCollection('projects', ({ data }) => data.published)).sort((a, b) => a.data.order - b.data.order);
-const videoSlugs = new Set(videoCategories.map((item) => item.slug));
-const graphicSlugs = new Set(graphicCategories.map((item) => item.slug));
-const videoProjects = projects.filter((p) => p.data.categories.some((c) => videoSlugs.has(c as never))).slice(0, 6);
-const graphicProjects = projects.filter((p) => p.data.categories.some((c) => graphicSlugs.has(c as never))).slice(0, 6);
-
 const services = {
   en: [
     ['VIDEO PRODUCTION', 'Professional filming, photography, editing and reshooting when needed. Bilingual subtitles are available for short-form, long-form and traditional commercial content.'],
     ['VIRTUAL BRANDING', 'Full-cycle support for virtual creators: concepting, recording, editing, publishing, content management and analytic recommendations.'],
-    ['GRAPHIC DESIGN & SOCIAL MEDIA', 'Imagery, graphics, video, merchandise and print collateral for successful businesses and restaurant groups.']
+    ['GRAPHIC DESIGN & SOCIAL MEDIA', 'Imagery, graphics, video, merchandise, business cards, websites and print collateral for successful businesses and restaurant groups.'],
+    ['AI CREATION & DIGITAL DESIGN', 'AI-assisted image and video creation using tools such as Photoshop, Premiere Pro, After Effects, CapCut, Image 2 and Seedance 2.0, with delivery across video, websites, business cards and other digital or print formats.']
   ],
   zh: [
     ['视频制作', '专业摄影、拍摄、剪辑与必要时的补拍，可提供双语字幕，覆盖短视频、长视频及传统商业内容。'],
     ['虚拟品牌', '为虚拟创作者提供从策划、录制、剪辑、发布到内容管理与数据建议的全流程支持。'],
-    ['平面设计与社交媒体', '为企业与连锁餐饮品牌制作图像、视频、周边及海报、桌卡、标识等印刷物料。']
+    ['平面设计与社交媒体', '为企业与连锁餐饮品牌制作图像、视频、周边、网站、名片及海报、桌卡、标识等数字与印刷物料。'],
+    ['AI 创作与数字设计', '使用 Photoshop、Premiere Pro、After Effects、剪映、Image 2、Seedance 2.0 等工具进行 AI 辅助图像与视频创作，并可延伸制作网站、名片及其他数字或印刷作品。']
   ],
   ja: [
     ['映像制作', '撮影、写真、編集、必要に応じた追加撮影に対応。短編・長編・広告映像向けの多言語字幕も制作します。'],
     ['バーチャルブランディング', '企画、収録、編集、公開、コンテンツ管理、分析提案までバーチャルクリエイターを一貫して支援します。'],
-    ['グラフィック＆SNS', '企業やレストラングループの画像、映像、グッズ、ポスター、テーブルテント、サインを制作します。']
+    ['グラフィック＆SNS', '企業やレストラングループの画像、映像、グッズ、ウェブサイト、名刺、ポスター、テーブルテント、サインを制作します。'],
+    ['AI制作＆デジタルデザイン', 'Photoshop、Premiere Pro、After Effects、CapCut、Image 2、Seedance 2.0などを用いたAI支援の画像・映像制作と、ウェブサイト、名刺、デジタル・印刷物の制作に対応します。']
   ]
 } satisfies Record<Lang, string[][]>;
 ---
@@ -55,7 +53,7 @@ const services = {
     <p>{t.introRole}</p>
   </section>
 
-  <section class="pioneer-section">
+  <section class="pioneer-section" id="lumina-trailblazer">
     <div class="pioneer-section__copy">
       <span class="section-index">02</span>
       <h2>{t.pioneerTitle}</h2>
@@ -63,12 +61,11 @@ const services = {
       <a class="text-link" href={`/${lang}/lumina-trailblazer/`}><span>{t.learnMore}</span><ArrowIcon /></a>
     </div>
     <div class="pioneer-section__visual">
-      <span class="technical-rings" aria-hidden="true"></span>
-      <img src="/media/brand/helmet-mark.png" alt={`${t.pioneerTitle} helmet`} loading="lazy" />
+      <img src="/media/brand/lumina-trailblazer-portrait.jpg" alt={`${t.pioneerTitle} portrait`} loading="lazy" />
     </div>
   </section>
 
-  <section class="services-section">
+  <section class="services-section" id="services">
     <div class="section-heading">
       <span class="section-index">03</span>
       <h2>{t.servicesTitle}</h2>
@@ -84,30 +81,20 @@ const services = {
     </div>
   </section>
 
-  <section class="work-section">
+  <section class="work-section" id="video-work">
     <div class="work-section__header">
       <div><span class="section-index">04</span><h2>{t.videoWork}</h2></div>
       <a class="text-link" href={`/${lang}/work/`}><span>{t.viewAll}</span><ArrowIcon /></a>
     </div>
-    <nav class="category-rail" aria-label={t.videoWork}>
-      {videoCategories.map((item) => <a href={`/${lang}/work/category/${item.slug}/`}>{item.label[lang]}</a>)}
-    </nav>
-    <div class="project-grid project-grid--video">
-      {videoProjects.map((project, index) => <ProjectCard {project} {lang} priority={index < 2} />)}
-    </div>
+    <CategoryShowcase categories={videoCategories} {projects} {lang} variant="video" />
   </section>
 
-  <section class="work-section graphic-section">
+  <section class="work-section graphic-section" id="graphic-work">
     <div class="work-section__header">
       <div><span class="section-index">05</span><h2>{t.graphicWork}</h2></div>
       <a class="text-link" href={`/${lang}/work/`}><span>{t.viewAll}</span><ArrowIcon /></a>
     </div>
-    <nav class="category-rail" aria-label={t.graphicWork}>
-      {graphicCategories.map((item) => <a href={`/${lang}/work/category/${item.slug}/`}>{item.label[lang]}</a>)}
-    </nav>
-    <div class="project-grid project-grid--graphic">
-      {graphicProjects.map((project) => <ProjectCard {project} {lang} />)}
-    </div>
+    <CategoryShowcase categories={graphicCategories} {projects} {lang} variant="graphic" />
   </section>
 
   <ContactSection {lang} />

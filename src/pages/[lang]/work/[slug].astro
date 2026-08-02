@@ -31,7 +31,7 @@ const t = ui[lang];
       {data.media.map((item) => item.type === 'image' ? (
         <figure><img src={item.src} alt={localized(item.alt, lang)} loading="lazy" /></figure>
       ) : item.type === 'video' ? (
-        <figure><video controls playsinline preload="metadata" poster={item.poster}><source src={item.src} type="video/mp4" />{localized(item.alt, lang)}</video></figure>
+        <figure><video controls muted playsinline preload="metadata" poster={item.poster} data-hover-preview><source src={item.src} type="video/mp4" />{localized(item.alt, lang)}</video></figure>
       ) : (
         <button class="youtube-placeholder" type="button" data-youtube={item.src} aria-label={localized(item.alt, lang)} style={`background-image:url(${item.poster || ''})`}><span>PLAY</span></button>
       ))}
@@ -50,6 +50,19 @@ const t = ui[lang];
         iframe.allowFullscreen = true;
         button.replaceWith(iframe);
       }, { once: true });
+    });
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    document.querySelectorAll<HTMLVideoElement>('[data-hover-preview]').forEach((video) => {
+      video.addEventListener('pointerenter', () => {
+        if (reducedMotion.matches) return;
+        video.play().catch(() => {});
+      });
+      video.addEventListener('pointerleave', () => video.pause());
+      video.addEventListener('focus', () => {
+        if (!reducedMotion.matches) video.play().catch(() => {});
+      });
+      video.addEventListener('blur', () => video.pause());
     });
   </script>
 </BaseLayout>

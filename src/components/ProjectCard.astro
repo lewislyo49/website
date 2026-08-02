@@ -8,10 +8,16 @@ import ArrowIcon from './ArrowIcon.astro';
 interface Props { project: CollectionEntry<'projects'>; lang: Lang; priority?: boolean; }
 const { project, lang, priority = false } = Astro.props;
 const data = project.data;
+const previewVideo = data.media.find((item) => item.type === 'video');
 ---
 <article class="project-card">
-  <a href={`/${lang}/work/${project.id}/`} class="project-card__image">
+  <a href={`/${lang}/work/${project.id}/`} class="project-card__image" data-preview-video={previewVideo ? '' : undefined}>
     <img src={data.cover} alt={localized(data.title, lang)} loading={priority ? 'eager' : 'lazy'} decoding="async" />
+    {previewVideo && (
+      <video muted loop playsinline preload="none" poster={previewVideo.poster || data.cover} aria-hidden="true">
+        <source src={previewVideo.src} type="video/mp4" />
+      </video>
+    )}
   </a>
   <div class="project-card__meta">
     <div>
@@ -22,3 +28,26 @@ const data = project.data;
     <a class="icon-link" href={`/${lang}/work/${project.id}/`} aria-label={localized(data.title, lang)}><ArrowIcon /></a>
   </div>
 </article>
+
+<script>
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll<HTMLAnchorElement>('[data-preview-video]').forEach((link) => {
+    const video = link.querySelector('video');
+    if (!video || link.dataset.previewReady === 'true') return;
+    link.dataset.previewReady = 'true';
+    const start = () => {
+      if (reducedMotion.matches) return;
+      video.muted = true;
+      video.play().then(() => link.classList.add('is-previewing')).catch(() => {});
+    };
+    const stop = () => {
+      video.pause();
+      video.currentTime = 0;
+      link.classList.remove('is-previewing');
+    };
+    link.addEventListener('pointerenter', start);
+    link.addEventListener('pointerleave', stop);
+    link.addEventListener('focus', start);
+    link.addEventListener('blur', stop);
+  });
+</script>

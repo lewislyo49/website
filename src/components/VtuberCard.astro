@@ -1,0 +1,23 @@
+---
+import type { Lang } from '../i18n/ui';
+import ArrowIcon from './ArrowIcon.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const copy = {
+  en: { title: 'VTUBER / VIRTUAL CREATOR', body: 'A discreet gateway to Lewis’s virtual creator work and links.', open: 'Open Linktree' },
+  zh: { title: '虚拟主播 / 虚拟创作者', body: 'Lewis 的虚拟主播活动与相关链接入口。', open: '打开 Linktree' },
+  ja: { title: 'VTUBER / バーチャルクリエイター', body: 'Lewisのバーチャルクリエイター活動とリンクへの入口です。', open: 'Linktreeを開く' }
+}[lang];
+---
+
+<article class="vtuber-card">
+  <div>
+    <span>XEISAR404</span>
+    <h3>{copy.title}</h3>
+    <p>{copy.body}</p>
+  </div>
+  <a href="https://linktr.ee/xeisar404" target="_blank" rel="noreferrer">
+    <span>{copy.open}</span><ArrowIcon />
+  </a>
+</article>

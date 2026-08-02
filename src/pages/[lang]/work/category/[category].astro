@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import ProjectCard from '../../../../components/ProjectCard.astro';
+import VtuberCard from '../../../../components/VtuberCard.astro';
 import SiteFooter from '../../../../components/SiteFooter.astro';
 import { languages, isLang, ui } from '../../../../i18n/ui';
 import { categories, categoryLabel } from '../../../../lib/catalog';
@@ -18,7 +19,12 @@ const title = categoryLabel(category, lang);
 <BaseLayout {lang} title={`${title} — Lewis Lyo`}>
   <section class="page-hero page-hero--compact"><span class="section-index">{t.work} / {title}</span><h1>{title}</h1></section>
   <section class="page-section">
-    {projects.length ? <div class="project-grid project-grid--featured">{projects.map((project) => <ProjectCard {project} {lang} />)}</div> : <div class="coming-soon"><img src="/media/brand/helmet-mark.png" alt="" /><h2>{t.comingSoon}</h2><p>{t.comingSoonBody}</p></div>}
+    {projects.length || category === 'non-profit' ? (
+      <div class="project-grid project-grid--featured">
+        {projects.map((project) => <ProjectCard {project} {lang} />)}
+        {category === 'non-profit' && <VtuberCard {lang} />}
+      </div>
+    ) : <div class="coming-soon"><img src="/media/brand/helmet-mark.png" alt="" /><h2>{t.comingSoon}</h2><p>{t.comingSoonBody}</p></div>}
   </section>
   <SiteFooter {lang} />
 </BaseLayout>
