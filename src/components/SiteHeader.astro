@@ -1,0 +1,32 @@
+---
+import { languageLabels, languages, ui, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang; overlay?: boolean; }
+const { lang, overlay = false } = Astro.props;
+const t = ui[lang];
+const currentPath = Astro.url.pathname;
+const pathWithoutLang = currentPath.startsWith('/404') ? '/' : currentPath.replace(/^\/(en|zh|ja)/, '') || '/';
+---
+<header class:list={['site-header', { 'site-header--overlay': overlay }]}>
+  <a class="brand-mark" href={`/${lang}/`} aria-label={t.home}>
+    <img src="/media/brand/logo-long.png" alt="Lewis Lyo 49 Productions" width="1593" height="679" />
+  </a>
+  <nav class="primary-nav" aria-label="Primary navigation">
+    <a href={`/${lang}/`}>{t.home}</a>
+    <a href={`/${lang}/work/`}>{t.work}</a>
+    <a href={`/${lang}/about/`}>{t.about}</a>
+  </nav>
+  <nav class="language-nav" aria-label="Language">
+    {languages.map((code) => (
+      <a class:list={{ active: code === lang }} data-language={code} lang={code} href={`/${code}${pathWithoutLang}`}>{languageLabels[code]}</a>
+    ))}
+  </nav>
+</header>
+
+<script>
+  document.querySelectorAll('[data-language]').forEach((link) => {
+    link.addEventListener('click', () => {
+      localStorage.setItem('lewis-lang', link.getAttribute('data-language') || 'en');
+    });
+  });
+</script>

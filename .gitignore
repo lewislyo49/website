@@ -1,0 +1,10 @@
+node_modules/
+.pnpm-store/
+.tools/
+dist/
+.astro/
+.netlify/
+.DS_Store
+tmp/
+source-backup/
+*.log

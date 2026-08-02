@@ -1,0 +1,55 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { languages, isLang, ui, localized } from '../../../i18n/ui';
+import { categoryLabel, clientLabel } from '../../../lib/catalog';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => data.published);
+  return languages.flatMap((lang) => projects.map((project) => ({ params: { lang, slug: project.id }, props: { project } })));
+}
+const lang = isLang(Astro.params.lang) ? Astro.params.lang : 'en';
+const { project } = Astro.props as { project: CollectionEntry<'projects'> };
+const data = project.data;
+const t = ui[lang];
+---
+<BaseLayout {lang} title={`${localized(data.title, lang)} — Lewis Lyo`} description={localized(data.summary, lang)}>
+  <article class="project-page">
+    <header class="project-page__header">
+      <a class="back-link" href={`/${lang}/work/`}>← {t.backWork}</a>
+      <h1>{localized(data.title, lang)}</h1>
+      <p>{localized(data.summary, lang)}</p>
+      <dl>
+        <div><dt>{t.client}</dt><dd>{clientLabel(data.client) || '—'}</dd></div>
+        <div><dt>{t.year}</dt><dd>{data.year}</dd></div>
+        <div><dt>{t.role}</dt><dd>{data.roles.join(' / ')}</dd></div>
+      </dl>
+      <nav class="project-tags">{data.categories.map((slug) => <a href={`/${lang}/work/category/${slug}/`}>{categoryLabel(slug, lang)}</a>)}</nav>
+    </header>
+    <div class="project-media">
+      {data.media.map((item) => item.type === 'image' ? (
+        <figure><img src={item.src} alt={localized(item.alt, lang)} loading="lazy" /></figure>
+      ) : item.type === 'video' ? (
+        <figure><video controls playsinline preload="metadata" poster={item.poster}><source src={item.src} type="video/mp4" />{localized(item.alt, lang)}</video></figure>
+      ) : (
+        <button class="youtube-placeholder" type="button" data-youtube={item.src} aria-label={localized(item.alt, lang)} style={`background-image:url(${item.poster || ''})`}><span>PLAY</span></button>
+      ))}
+    </div>
+  </article>
+  <SiteFooter {lang} />
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('[data-youtube]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.youtube;
+        if (!id) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1`;
+        iframe.title = button.getAttribute('aria-label') || 'YouTube video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        button.replaceWith(iframe);
+      }, { once: true });
+    });
+  </script>
+</BaseLayout>

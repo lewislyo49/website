@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n/ui';
+import { localized } from '../i18n/ui';
+import { categoryLabel, clientLabel } from '../lib/catalog';
+import ArrowIcon from './ArrowIcon.astro';
+
+interface Props { project: CollectionEntry<'projects'>; lang: Lang; priority?: boolean; }
+const { project, lang, priority = false } = Astro.props;
+const data = project.data;
+---
+<article class="project-card">
+  <a href={`/${lang}/work/${project.id}/`} class="project-card__image">
+    <img src={data.cover} alt={localized(data.title, lang)} loading={priority ? 'eager' : 'lazy'} decoding="async" />
+  </a>
+  <div class="project-card__meta">
+    <div>
+      <p>{clientLabel(data.client)} · {data.year}</p>
+      <h3><a href={`/${lang}/work/${project.id}/`}>{localized(data.title, lang)}</a></h3>
+      <span>{data.categories.slice(0, 2).map((slug) => categoryLabel(slug, lang)).join(' / ')}</span>
+    </div>
+    <a class="icon-link" href={`/${lang}/work/${project.id}/`} aria-label={localized(data.title, lang)}><ArrowIcon /></a>
+  </div>
+</article>

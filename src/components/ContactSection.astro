@@ -1,0 +1,47 @@
+---
+import type { Lang } from '../i18n/ui';
+import { ui } from '../i18n/ui';
+import ArrowIcon from './ArrowIcon.astro';
+
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+<section class="contact-section" id="contact">
+  <div class="contact-section__intro">
+    <span class="section-index">06</span>
+    <h2>{t.create}</h2>
+    <p>{t.createBody}</p>
+    <div class="direct-contact">
+      <a href="mailto:lewislyo49@gmail.com">lewislyo49@gmail.com</a>
+      <a href="sms:+19713825387">+1 (971) 382-5387 · {t.textPreferred}</a>
+      <a href="https://www.instagram.com/lewislyo49/" target="_blank" rel="noreferrer">Instagram · @lewislyo49</a>
+      <span>Salem, Oregon, USA</span>
+      <span>{t.languages}</span>
+    </div>
+  </div>
+  <form class="contact-form" name="project-inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" action={`/${lang}/thank-you/`}>
+    <input type="hidden" name="form-name" value="project-inquiry" />
+    <input type="hidden" name="subject" value="New portfolio project inquiry" />
+    <p class="honeypot" aria-hidden="true"><label>Do not fill this out <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+    <label>{t.name}<input name="name" type="text" autocomplete="name" required /></label>
+    <label>{t.email}<input name="email" type="email" autocomplete="email" required /></label>
+    <label>{t.company}<input name="company" type="text" autocomplete="organization" /></label>
+    <label>{t.projectType}
+      <select name="project-type" required>
+        <option value="">—</option>
+        <option>Video Production</option>
+        <option>VFX / Motion</option>
+        <option>Graphic Design</option>
+        <option>Virtual Branding</option>
+        <option>Other</option>
+      </select>
+    </label>
+    <div class="form-pair">
+      <label>{t.timeline}<input name="timeline" type="text" /></label>
+      <label>{t.budget}<input name="budget" type="text" /></label>
+    </div>
+    <label>{t.message}<textarea name="message" rows="5" required></textarea></label>
+    <button type="submit"><span>{t.send}</span><ArrowIcon /></button>
+  </form>
+</section>

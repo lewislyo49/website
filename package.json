@@ -1,0 +1,23 @@
+{
+  "name": "lewis-lyo-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "media:check": "node scripts/check-media.mjs",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro check && node scripts/check-media.mjs && ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
+  },
+  "dependencies": {
+    "@fontsource/noto-serif-jp": "latest",
+    "@fontsource/noto-serif-sc": "latest",
+    "astro": "7.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

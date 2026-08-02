@@ -1,0 +1,23 @@
+---
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Lewis Lyo</title>
+  </head>
+  <body style="background:#030405;color:#fff;font-family:serif">
+    <p><a href="/en/" style="color:#45e8ff">Enter Lewis Lyo portfolio</a></p>
+    <script is:inline>
+      const stored = localStorage.getItem('lewis-lang');
+      const supported = ['en', 'zh', 'ja'];
+      const preferred = (navigator.languages || [navigator.language || 'en'])
+        .map((value) => value.toLowerCase().split('-')[0])
+        .find((value) => supported.includes(value));
+      const language = supported.includes(stored) ? stored : (preferred || 'en');
+      window.location.replace(`/${language}/`);
+    </script>
+  </body>
+</html>
